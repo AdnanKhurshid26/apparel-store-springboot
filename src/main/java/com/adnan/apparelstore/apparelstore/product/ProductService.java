@@ -27,19 +27,21 @@ public class ProductService {
         return products.stream().filter(p -> p.getSku().equals(sku)).findFirst().get();
     }
 
-    // public void addProduct(Product product) {
-    //     products.add(product);
-    // }
+    public void addProduct(Product product) {
+        products.add(product);
+    }
 
-    // public void updateProduct(Product product, Long id) {
-    //     for(int i = 0; i < products.size(); i++) {
-    //         Product p = products.get(i);
-    //         if(p.getId().equals(id)) {
-    //             products.set(i, product);
-    //             return;
-    //         }
-    //     }
-    // }
+    public void updateProduct(String sku, Product product) {
+
+        for(int i=0; i<products.size(); i++){
+            Product p = products.get(i);
+            if(p.getSku().equals(sku)){
+                products.set(i, product);
+                return;
+            }
+        }
+        
+    }
 
     public void deleteProduct(String sku) {
         products.removeIf(p -> p.getSku().equals(sku));
