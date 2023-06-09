@@ -3,7 +3,6 @@ package com.adnan.apparelstore.apparelstore.product;
 import java.util.List;
 
 public class Product {
-    private Long id;
     private String sku;
     private int quantity;
     private String name;
@@ -18,9 +17,9 @@ public class Product {
     public Product() {
     }
 
-    public Product(Long id, String sku,int qty, String name, String shortDescription, String description, int price, List<String> categories, List<String> images, List<String> sizes, List<String> colors) {
+    public Product(String sku,int qty, String name, String shortDescription, String description, int price, List<String> categories, List<String> images, List<String> sizes, List<String> colors) {
         super();
-        this.id = id;
+        
         this.sku = sku;
         this.name = name;
         this.quantity = qty;
@@ -31,14 +30,6 @@ public class Product {
         this.images = images;
         this.sizes = sizes;
         this.colors = colors;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getSku() {
@@ -123,7 +114,7 @@ public class Product {
 
     @Override
     public String toString() {
-        return "Product [id=" + id + ", sku=" + sku + ", quantity=" + quantity + ", name=" + name
+        return "Product [ sku=" + sku + ", quantity=" + quantity + ", name=" + name
                 + ", shortDescription=" + shortDescription + ", description=" + description + ", price=" + price
                 + ", categories=" + categories + ", images=" + images + ", sizes=" + sizes + ", colors=" + colors + "]";
     }

@@ -23,10 +23,10 @@ public class ProductController {
         return productService.getAllProducts();
     }
 
-    @GetMapping("/products/{id}")
+    @GetMapping("/products/{sku}")
     @ResponseBody
-    public Product getProductById(@PathVariable Long id) {
-        return productService.getProductById(id);
+    public Product getProductById(@PathVariable String sku) {
+        return productService.getProductBySku(sku);
     }
 
 

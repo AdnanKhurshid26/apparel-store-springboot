@@ -12,36 +12,36 @@ public class ProductService {
 
     static{
         //Initialize Data
-        products.add(new Product(1L, "SKU-1", 10, "Product 1", "Short Description 1", "Description 1", 100, null, null, null, null));
-        products.add(new Product(2L, "SKU-2", 20, "Product 2", "Short Description 2", "Description 2", 200, null, null, null, null));
-        products.add(new Product(3L, "SKU-3", 30, "Product 3", "Short Description 3", "Description 3", 300, null, null, null, null));
-        products.add(new Product(4L, "SKU-4", 40, "Product 4", "Short Description 4", "Description 4", 400, null, null, null, null));
-        products.add(new Product(5L, "SKU-5", 50, "Product 5", "Short Description 5", "Description 5", 500, null, null, null, null));
+        products.add(new Product("SKU-1", 10, "Product 1", "Short Description 1", "Description 1", 100, null, null, null, null));
+        products.add(new Product("SKU-2", 20, "Product 2", "Short Description 2", "Description 2", 200, null, null, null, null));
+        products.add(new Product("SKU-3", 30, "Product 3", "Short Description 3", "Description 3", 300, null, null, null, null));
+        products.add(new Product("SKU-4", 40, "Product 4", "Short Description 4", "Description 4", 400, null, null, null, null));
+        products.add(new Product("SKU-5", 50, "Product 5", "Short Description 5", "Description 5", 500, null, null, null, null));
     }
 
     public List<Product> getAllProducts() {
         return products;
     }
 
-    public Product getProductById(Long id) {
-        return products.stream().filter(p -> p.getId().equals(id)).findFirst().get();
+    public Product getProductBySku(String sku) {
+        return products.stream().filter(p -> p.getSku().equals(sku)).findFirst().get();
     }
 
     // public void addProduct(Product product) {
     //     products.add(product);
     // }
 
-    public void updateProduct(Product product, Long id) {
-        for(int i = 0; i < products.size(); i++) {
-            Product p = products.get(i);
-            if(p.getId().equals(id)) {
-                products.set(i, product);
-                return;
-            }
-        }
-    }
+    // public void updateProduct(Product product, Long id) {
+    //     for(int i = 0; i < products.size(); i++) {
+    //         Product p = products.get(i);
+    //         if(p.getId().equals(id)) {
+    //             products.set(i, product);
+    //             return;
+    //         }
+    //     }
+    // }
 
-    public void deleteProduct(Long id) {
-        products.removeIf(p -> p.getId().equals(id));
+    public void deleteProduct(String sku) {
+        products.removeIf(p -> p.getSku().equals(sku));
     }
 }
