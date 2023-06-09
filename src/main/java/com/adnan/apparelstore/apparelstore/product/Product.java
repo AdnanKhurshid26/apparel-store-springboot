@@ -2,7 +2,15 @@ package com.adnan.apparelstore.apparelstore.product;
 
 import java.util.List;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
+
+@Document(collection = "products")
 public class Product {
+
+    @Id
+    @Field("sku")
     private String sku;
     private int quantity;
     private String name;
@@ -14,12 +22,13 @@ public class Product {
     private List<String> sizes;
     private List<String> colors;
 
+
+
     public Product() {
     }
 
     public Product(String sku,int qty, String name, String shortDescription, String description, int price, List<String> categories, List<String> images, List<String> sizes, List<String> colors) {
         super();
-        
         this.sku = sku;
         this.name = name;
         this.quantity = qty;

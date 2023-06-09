@@ -2,64 +2,52 @@ package com.adnan.apparelstore.apparelstore.product;
 
 import java.util.List;
 
-import org.springframework.stereotype.Controller;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController
+
 public class ProductController {
 
-    private ProductService productService;
+    @Autowired
+    private ProductRepository productRepository;
 
-    public ProductController(ProductService productService) {
-        super();    
-        this.productService = productService;
-    }
 
     //get all products
-    
     @GetMapping("/products")
-    @ResponseBody
-    public List<Product> getAllProducts() {
-        return productService.getAllProducts();
+    public ResponseEntity<List<Product>> getAllProducts() {
+        
+        return ResponseEntity.ok(productRepository.findAll());
     }
 
     //get product by sku
-
-    @GetMapping("/products/{sku}")
-    @ResponseBody
-    public Product getProductById(@PathVariable String sku) {
-        return productService.getProductBySku(sku);
+    @GetMapping("products/{sku}")
+    public ResponseEntity<Product> getProductBySku(@PathVariable String sku) {
+        return ResponseEntity.ok(productRepository.findById(sku).get());
     }
 
     //add product
-
     @PostMapping("/products")
-    @ResponseBody
-    public void addProduct(@RequestBody Product product) {
-        productService.addProduct(product);
+    public ResponseEntity<Product> addProduct(@RequestBody Product product) {
+        return ResponseEntity.ok(productRepository.save(product));
     }
 
     //delete product by sku
-
-    @DeleteMapping("/products/{sku}")
-    @ResponseBody
+    @DeleteMapping("products/{sku}")
     public void deleteProduct(@PathVariable String sku) {
-        productService.deleteProduct(sku);
+        productRepository.deleteById(sku);
     }
-
     //update product by sku
-
-    @PutMapping("/products/{sku}")
-    @ResponseBody
-    public void updateProduct(@PathVariable String sku, @RequestBody Product product) {
-        productService.updateProduct(sku, product);
+    @PutMapping("/products")
+    public ResponseEntity<Product> updateProduct( @RequestBody Product product) {
+        return ResponseEntity.ok(productRepository.save(product));
     }
-
 
 }
