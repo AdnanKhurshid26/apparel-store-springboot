@@ -1,7 +1,6 @@
 package com.adnan.apparelstore.apparelstore.user;
 
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -16,12 +15,12 @@ public class User {
     private String name;
     private String password;
     private List<String> addresses;
-    private Map<String, Integer> cart;
+    private List<CartItem> cart;
 
     public User() {
     }
 
-    public User(String email, String name, String password, List<String> addresses, Map<String, Integer> cart) {
+    public User(String email, String name, String password, List<String> addresses, List<CartItem> cart) {
         super();
         this.email = email;
         this.name = name;
@@ -62,11 +61,11 @@ public class User {
         this.addresses = addresses;
     }
 
-    public Map<String, Integer> getCart() {
+    public List<CartItem> getCart() {
         return cart;
     }
 
-    public void setCart(Map<String, Integer> cart) {
+    public void setCart(List<CartItem> cart) {
         this.cart = cart;
     }
 
@@ -75,5 +74,8 @@ public class User {
         return "User [email=" + email + ", name=" + name + ", password=" + password + ", addresses=" + addresses
                 + ", cart=" + cart + "]";
     }
+    
+
+   
 
 }

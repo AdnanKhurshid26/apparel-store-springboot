@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="fragments/imports"></div>
+    <title>Profile</title>
+</head>
+<body>
+     
+    <div th:replace="fragments/navbar"></div>
+
+      <div class="container form-container">
+        
+        
+        <form class="signup-form">
+            
+            <div class="input-field-signup">
+                <label for="">Email</label>
+                <input type="email" name="user-email" id="user-email" th:value="${user.email}" readonly>
+            </div>
+            <div class="input-field-signup">
+                <label for="">Name</label>
+                <input type="text" name="user-name" id="username" th:value="${user.name}" required>
+            </div>
+            <div class="input-field-signup">
+                <label for="">Addresses</label>
+                <!-- <div th:each="product : ${products}" class="card" style="width: 18rem;"> -->
+                <input th:each="addr : ${user.addresses}" type="text" name="address" th:value="${addr}" required>
+            </div>
+            <!-- <div class="input-field-signup">
+                <label for="">Confirm Password</label>
+                <input type="password" name="confirm-password" id="confirm-password" required>
+            </div> -->
+            <div class="input-field-signup">
+                <button class="btn btn-primary" style="width: 100%;" type="submit">Update Info</button>
+            </div>
+
+        </form>
+        
+      </div>
+
+   
+
+</body>
+</html>
