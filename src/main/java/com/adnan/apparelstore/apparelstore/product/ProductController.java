@@ -26,7 +26,7 @@ public class ProductController {
     }
 
     //get product by sku
-    @GetMapping("products/{sku}")
+    @GetMapping("/products/{sku}")
     public ResponseEntity<Product> getProductBySku(@PathVariable String sku) {
         return ResponseEntity.ok(productService.getProductBySku(sku));
     }
@@ -46,7 +46,7 @@ public class ProductController {
     }
 
     //delete product by sku
-    @DeleteMapping("products/{sku}")
+    @DeleteMapping("/products/{sku}")
     public void deleteProduct(@PathVariable String sku) {
         productService.deleteProduct(sku);
     }

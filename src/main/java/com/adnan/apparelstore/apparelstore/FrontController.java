@@ -200,11 +200,11 @@ public class FrontController {
     @PostMapping("/admin/update-product")
     public String updateProduct(@Valid Product product) {
 
-        String url = "http://localhost:8080/products"; // Replace with your actual URL
-        HttpMethod httpMethod = HttpMethod.PUT; // Replace with the desired HTTP method (POST, PUT, etc.)
+        String url = "http://localhost:8080/products"; 
+        HttpMethod httpMethod = HttpMethod.PUT; // 
         
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON); // Replace with the appropriate content type if needed
+        headers.setContentType(MediaType.APPLICATION_JSON); 
 // Replace with your actual object
         HttpEntity<Product> requestEntity = new HttpEntity<>(product, headers);
 
@@ -233,12 +233,10 @@ public class FrontController {
     @PostMapping("/admin/add-product")
     public String addProduct(@Valid Product product) {
 
-        String url = "http://localhost:8080/products"; // Replace with your actual URL
-        HttpMethod httpMethod = HttpMethod.POST; // Replace with the desired HTTP method (POST, PUT, etc.)
-        
+        String url = "http://localhost:8080/products"; 
+        HttpMethod httpMethod = HttpMethod.POST;
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON); // Replace with the appropriate content type if needed
-// Replace with your actual object
+        headers.setContentType(MediaType.APPLICATION_JSON); 
         HttpEntity<Product> requestEntity = new HttpEntity<>(product, headers);
 
 
