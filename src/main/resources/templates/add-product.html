@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <div th:replace="fragments/imports"></div>
+    <title>Update Product</title>
+  </head>
+  <body>
+    <div th:replace="fragments/admin-nav"></div>
+
+    <div class="container mt-4">
+
+       
+      
+      <div class="form-container">
+        
+        <form action="/admin/add-product" method="POST"  class="form-update-product">
+            <h1>Add New Product</h1>
+          <div class="mb-3">
+            <label for="sku" class="form-label">SKU</label>
+            <input
+              type="text"
+              class="form-control"
+              id="product-sku"
+              name="sku"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="product-name" class="form-label">Product Name</label>
+            <input
+              type="text"
+              class="form-control"
+              id="product-name"
+                name="name"
+          
+            />
+          </div>
+          <div class="mb-3">
+            <label for="product-price" class="form-label">Price</label>
+            <input
+              type="number"
+              class="form-control"
+              id="product-price"
+                name="price"
+          
+              min="1"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="product-price" class="form-label">Quantity</label>
+            <input
+              type="number"
+              class="form-control"
+              id="product-price"
+                name="quantity"
+          min="1"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="product-shortDescription" class="form-label"
+              >Short Description</label
+            >
+            <input
+              type="text"
+              class="form-control"
+              id="product-shortDescription"
+            
+                name="shortDescription"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="product-description" class="form-label"
+              >Description</label
+            >
+            <textarea
+              class="form-control"
+              id="product-description"
+              rows="3"
+                name="description"
+              
+            ></textarea>
+          </div>
+
+          
+
+          <div class="mb-3">
+            <label for="product-categories" class="form-label"
+              >Categories</label
+            >
+            <input
+              type="text"
+              class="form-control"
+              id="product-categories"
+        
+              name="categories"
+            />
+            <div id="categoriesHelpBlock" class="form-text">
+              Enter categories separated by comma
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="product-images" class="form-label">Image Urls</label>
+            <input
+              type="text"
+              class="form-control"
+              id="product-images"
+         
+                name="images"
+            />
+            <div id="imagesHelpBlock" class="form-text">
+              Enter image urls separated by comma
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-success">Add New Product</button>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>

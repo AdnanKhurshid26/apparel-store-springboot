@@ -1,32 +1,40 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
+  <head>
     <div th:replace="fragments/imports"></div>
     <title>Home</title>
-</head>
-<body>
-     
+  </head>
+  <body>
     <div th:replace="fragments/navbar"></div>
 
-      <div class="container">
-        <div class="cards">
-            <div th:each="product : ${products}" class="card" >
-                <img th:src="${product.images[0]}" class="card-img-top" alt="">
-                <div class="card-body d-flex flex-column">
-                  <h5 th:text="${product.name}" class="card-title"></h5>
-                  <h5 th:text="'₹' + ${product.price}" class="card-title" style="color:rgb(53, 220, 53)"></h5>
-                  <p th:utext="${product.shortDescription}" class="card-text"></p>
-                  <form action="/add-to-cart" method="POST" class="mt-auto" style="width: 100%;">
-                    <input type="hidden" name="sku" th:value="${product.sku}">
-                    <button type="submit" class="btn btn-primary mt-auto">Add to Cart</button>
-                  </form>
-                  
-                </div>
-
-              </div>
+    <div class="container">
+      <div class="cards">
+        <div th:each="product : ${products}" class="card">
+          <img th:src="${product.images[0]}" class="card-img-top" alt="" />
+          <div class="card-body d-flex flex-column">
+            <h5 th:text="${product.name}" class="card-title"></h5>
+            <h5
+              th:text="'₹' + ${product.price}"
+              class="card-title"
+              style="color: rgb(53, 220, 53)"
+            ></h5>
+            <p th:utext="${product.shortDescription}" class="card-text"></p>
+            <form
+              action="/add-to-cart"
+              method="POST"
+              class="mt-auto"
+              style="width: 100%"
+            >
+              <input type="hidden" name="sku" th:value="${product.sku}" />
+              <button type="submit" class="btn btn-primary mt-auto">
+                Add to Cart
+              </button>
+            </form>
+          </div>
         </div>
+      </div>
 
-        <nav aria-label="Page navigation example">
+      <!-- <nav aria-label="Page navigation example">
             <ul class="pagination">
               <li class="page-item"><a class="page-link" href="#">Previous</a></li>
               <li class="page-item"><a class="page-link" href="#">1</a></li>
@@ -34,11 +42,7 @@
               <li class="page-item"><a class="page-link" href="#">3</a></li>
               <li class="page-item"><a class="page-link" href="#">Next</a></li>
             </ul>
-          </nav>
-        
-      </div>
-
-   
-
-</body>
+          </nav> -->
+    </div>
+  </body>
 </html>

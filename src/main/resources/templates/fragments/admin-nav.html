@@ -1,14 +1,11 @@
-<nav class="navbar navbar-expand-lg " >
+<nav class="navbar navbar-expand-lg" >
     <div class="container-fluid">
-      <a class="navbar-brand" href="/">Apparel Store</a>
+      <a class="navbar-brand" href="/admin"><h3 style="color: rgb(82, 82, 82);">Admin Panel</h3></a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="/">Home</a>
-          </li>
           <li>
             <form class="d-flex" role="search">
                 <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
@@ -18,19 +15,20 @@
         </ul>
 
         <div class="nav-btns">
-            <a href="/profile" class="btn btn-primary">
+            <a href="/admin/add-product" class="btn btn-success">
                 <div class="cart-notif">
                     <span class="material-symbols-outlined">
-                        account_circle
+                        add_circle
                         </span>
+                        Add New Product
                 </div>
                 </a>
-            <a href="/cart" class="btn btn-primary ">
+            <a href="/cart" class="btn btn-danger">
                 <div class="cart-notif">
                     <span class="material-symbols-outlined">
-                        shopping_cart
+                        logout
                         </span>
-                    <span class="badge bg-danger rounded-pill">14</span>
+                    Logout
                 </div>
                 </a>
         </div>

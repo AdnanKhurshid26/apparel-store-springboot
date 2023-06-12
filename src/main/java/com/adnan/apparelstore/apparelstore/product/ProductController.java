@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+
 public class ProductController {
 
     @Autowired
@@ -35,6 +36,11 @@ public class ProductController {
     //add product
     @PostMapping("/products")
     public ResponseEntity<Product> addProduct(@RequestBody Product product) {
+
+        //check if product already exists
+        if(productRepository.findById(product.getSku()).isPresent()) {
+            return ResponseEntity.badRequest().build();
+        }
         return ResponseEntity.ok(productRepository.save(product));
     }
 
