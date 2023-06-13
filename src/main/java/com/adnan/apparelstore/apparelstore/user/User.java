@@ -14,20 +14,24 @@ public class User {
     private String email;
     private String name;
     private String password;
+    private String role;
     private List<String> addresses;
     private List<CartItem> cart;
 
     public User() {
     }
 
-    public User(String email, String name, String password, List<String> addresses, List<CartItem> cart) {
+    public User(String email, String name, String password,String role, List<String> addresses, List<CartItem> cart) {
         super();
         this.email = email;
         this.name = name;
         this.password = password;
+        this.role = role;
         this.addresses = addresses;
         this.cart = cart;
     }
+
+    
 
     public void setId(String id) {
         this.id = id;
@@ -61,6 +65,14 @@ public class User {
         this.password = password;
     }
 
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
     public List<String> getAddresses() {
         return addresses;
     }
@@ -82,6 +94,8 @@ public class User {
         return "User [email=" + email + ", name=" + name + ", password=" + password + ", addresses=" + addresses
                 + ", cart=" + cart + "]";
     }
+
+   
     
 
    

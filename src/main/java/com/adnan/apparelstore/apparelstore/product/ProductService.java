@@ -3,6 +3,8 @@ package com.adnan.apparelstore.apparelstore.product;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 
@@ -15,6 +17,10 @@ public class ProductService {
 
     public List<Product> getAllProducts() {
         return productRepository.findAll();
+    }
+
+    public Page<Product> getPaginatedProducts(int page, int size) {
+       return productRepository.findAll(PageRequest.of(page, size));
     }
 
     public Product getProductBySKU(String sku) {

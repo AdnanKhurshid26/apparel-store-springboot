@@ -7,7 +7,7 @@ public class CartItem {
     private String imageUrl;
     private int price;
     private int quantity;
-
+    
     public CartItem() {
     }
 

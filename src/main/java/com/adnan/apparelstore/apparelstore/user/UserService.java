@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.adnan.apparelstore.apparelstore.product.Product;
@@ -18,6 +19,9 @@ public class UserService {
     @Autowired
     private ProductService productService;
 
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
+
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
@@ -31,6 +35,11 @@ public class UserService {
         if(userRepository.findByEmail(user.getEmail()) != null) {
             return null;
         }
+
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+        user.setRole("USER");
+
         return userRepository.save(user);
     }
 

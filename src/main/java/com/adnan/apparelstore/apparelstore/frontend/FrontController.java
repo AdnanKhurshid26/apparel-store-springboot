@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -32,10 +33,18 @@ public class FrontController {
    private FrontService frontService;
     
     @GetMapping("/")
-    public String home(Model model) {
+    public String home(Model model,@RequestParam(value = "size",defaultValue = "8") int size,@RequestParam(value = "page",defaultValue = "0") int page) {
        
-        List<Product> products = frontService.getAllProducts();
+        Page<Product> prods = frontService.getPaginatedProducts(page, size);
+        List<Product> products = prods.getContent();
+        int totalPages = prods.getTotalPages();
+        int currentPage = prods.getNumber();
+        System.out.println("totalPages: "+totalPages);
+        System.out.println("currentPage: "+currentPage);
         model.addAttribute("products", products);
+        model.addAttribute("currentPage", currentPage);
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("pageSize", size);   
         return "home";
     }
 
@@ -49,11 +58,19 @@ public class FrontController {
         return "profile";
     }
 
+    @PostMapping("/profile")
+    public String updateProfile(@Valid User user) {
+
+        //call api /products to get user profile
+        frontService.updateProfile(user);
+        return "redirect:/profile";
+    }
+
     @PostMapping("/add-to-cart")
-    public String addToCart(@RequestParam String SKU) {
+    public String addToCart(@RequestParam String SKU,@RequestParam int page) {
 
         frontService.addToCart(SKU);
-        return "redirect:/";
+        return "redirect:/?page="+page;
     }
 
     @PostMapping("/remove-from-cart")
@@ -91,13 +108,21 @@ public class FrontController {
     //Admin routes
 
     @GetMapping("/admin")
-    public String admin(Model model) {
+    public String admin(Model model,@RequestParam(value = "size",defaultValue = "8") int size,@RequestParam(value = "page",defaultValue = "0") int page) {
        
-            List<Product> products = frontService.getAllProducts();
-            model.addAttribute("products", products);
-            model.addAttribute("its",products);
+        Page<Product> prods = frontService.getPaginatedProducts(page, size);
+        List<Product> products = prods.getContent();
+        int totalPages = prods.getTotalPages();
+        int currentPage = prods.getNumber();
+        System.out.println("totalPages: "+totalPages);
+        System.out.println("currentPage: "+currentPage);
+        model.addAttribute("products", products);
+        model.addAttribute("currentPage", currentPage);
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("pageSize", size);   
         return "admin";
     }
+
 
     @PostMapping("/admin/delete-product")
     public String deleteProduct(@RequestParam String sku) {

@@ -3,7 +3,10 @@ package com.adnan.apparelstore.apparelstore.frontend;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -13,12 +16,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import com.adnan.apparelstore.apparelstore.product.Product;
+import com.adnan.apparelstore.apparelstore.product.ProductRepository;
 import com.adnan.apparelstore.apparelstore.user.CartItem;
 import com.adnan.apparelstore.apparelstore.user.User;
 
 @Service
 public class FrontService {
     
+    @Autowired
+    private  ProductRepository productRepository;
+
     private RestTemplate restTemplate = new RestTemplate();
     private String sourceurl = "http://localhost:8080";
     private HttpMethod getMethod = HttpMethod.GET;
@@ -41,6 +48,13 @@ public class FrontService {
         return products;
     }
 
+    public Page<Product> getPaginatedProducts(int page, int size) {
+        
+        Page<Product> products = productRepository.findAll(PageRequest.of(page, size));
+
+        return products;
+    }
+
     public Product getProductBySKU(String sku) {
         String url = sourceurl + "/products/"+sku;
         HttpEntity<?> requestEntity = null;
@@ -59,6 +73,18 @@ public class FrontService {
         User user = response.getBody();
 
         return user;
+    }
+
+    public String updateProfile(User user) {
+        String url = sourceurl + "/users";
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<User> requestEntity = new HttpEntity<User>(user, headers);
+        ParameterizedTypeReference<String> responseType = new ParameterizedTypeReference<String>() {};
+        ResponseEntity<String> response = exchange(url, postMethod, requestEntity, responseType);
+        String message = response.getBody();
+
+        return message;
     }
 
     public String addToCart(String sku) {

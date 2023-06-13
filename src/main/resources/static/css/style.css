@@ -193,5 +193,39 @@
 
 nav{
     
-    background: #bce3ff;
+    background: #104FA6;
+}
+
+.navbar .btn{
+    background: #eb5b34;
+    color: #fff;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    font-size: 1.2vw;
+    letter-spacing: 1px;
+    font-weight: 500;
+    border-radius: 5px;
+}
+
+.badge{
+    background: #104FA6;
+    color: #fff;
+    border: none;
+    padding: 5px;
+    cursor: pointer;
+    font-size: 1vw;
+    letter-spacing: 1px;
+    font-weight: 500;
+    border-radius: 5px;
+}
+
+.jump-form{
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px;
+    justify-content: center;
+    align-items: center;
 }

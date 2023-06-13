@@ -11,11 +11,11 @@
       <div class="container form-container">
         
         
-        <form class="signup-form">
+        <form class="signup-form" action="/profile" method="post">
             
             <div class="input-field-signup">
                 <label for="">Email</label>
-                <input type="email" name="user-email" id="user-email" th:value="${user.email}" readonly>
+                <input type="email" name="user-email" id="user-email" th:value="${user.email}" readonly style="border: solid 1px rgb(204, 204, 204);">
             </div>
             <div class="input-field-signup">
                 <label for="">Name</label>
@@ -25,6 +25,7 @@
                 <label for="">Addresses</label>
                 <!-- <div th:each="product : ${products}" class="card" style="width: 18rem;"> -->
                 <input th:each="addr : ${user.addresses}" type="text" name="address" th:value="${addr}" required>
+                <input type="text" name="address" hidden disabled required>
             </div>
             <!-- <div class="input-field-signup">
                 <label for="">Confirm Password</label>
