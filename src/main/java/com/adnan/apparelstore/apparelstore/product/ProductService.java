@@ -17,24 +17,30 @@ public class ProductService {
         return productRepository.findAll();
     }
 
-    public Product getProductBySku(String sku) {
-        return productRepository.findById(sku).get();
+    public Product getProductBySKU(String sku) {
+        return productRepository.findBySKU(sku);
     }
 
     public Product addProduct(Product product) {
 
-        if(productRepository.findById(product.getSku()).isPresent()) {
+        if(productRepository.findById(product.getSKU()).isPresent()) {
             return null;
         }
         return productRepository.save(product);
     }
 
     public void deleteProduct(String sku) {
-        productRepository.deleteById(sku);
+        productRepository.deleteBySKU(sku);
     }
 
-    public Product updateProduct(Product product) {
-        return productRepository.save(product);
+    public Product updateProduct(Product updatedProduct) {
+        Product existingProduct = productRepository.findBySKU(updatedProduct.getSKU());
+        if (existingProduct != null) {
+            updatedProduct.setId(existingProduct.getId()); 
+            return productRepository.save(updatedProduct);
+        } else {
+            return null;
+        }
     }
 
 }

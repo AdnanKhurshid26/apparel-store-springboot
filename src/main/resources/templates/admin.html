@@ -8,96 +8,52 @@
     <div th:replace="fragments/admin-nav"></div>
 
     <div class="container">
-      <div class="cards">
-        <div th:each="product : ${products}" class="card">
-          <img th:src="${product.images[0]}" class="card-img-top" alt="" />
-          <div class="card-body d-flex flex-column">
-            <h5 th:text="${product.name}" class="card-title"></h5>
-            <h5
-              th:text="'₹' + ${product.price}"
-              class="card-title"
-              style="color: rgb(53, 220, 53)"
-            ></h5>
-            <p th:utext="${product.shortDescription}" class="card-text"></p>
-            <div class="_card-bottom mt-auto">
-              <a
-              th:href="@{'/admin/update-product/' + ${product.sku}}"
-                type="button"
-                class="btn btn-primary mt-auto cart-notif"
-              >
-                <span class="material-symbols-outlined"> update </span>
-                Update Prodcut</a
-              >
-              
-              <button
-                class="btn btn-danger mt-auto cart-notif"
-                data-bs-toggle="modal"
-                data-bs-target="#exampleModal"
-              >
-                <span class="material-symbols-outlined"> delete </span>
-                Delete Product
-              </button>
-              <!-- Modal -->
-              <div
-                class="modal fade"
-                id="exampleModal"
-                tabindex="-1"
-                aria-labelledby="exampleModalLabel"
-                aria-hidden="true"
-              >
-                <div class="modal-dialog">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h1 class="modal-title fs-5" id="exampleModalLabel">
-                        Confirm Deletion
-                      </h1>
-                      <button
-                        type="button"
-                        class="btn-close"
-                        data-bs-dismiss="modal"
-                        aria-label="Close"
-                      ></button>
-                    </div>
-                    <div class="modal-body">
-                      Are you sure you want to delete the product :
-                    </div>
-                    <div
-                      th:text="'SKU : ' +${product.sku}"
-                      class="modal-body"
-                      style="font-size: larger"
-                    ></div>
-                    <div
-                      th:text="'Name : ' +${product.name}"
-                      class="modal-body"
-                      style="font-size: larger"
-                    ></div>
-                    <div class="modal-footer">
-                      <button
-                        type="button"
-                        class="btn btn-secondary"
-                        data-bs-dismiss="modal"
-                      >
-                        Close
-                      </button>
-                      <form
-                        action="/admin/delete-product"
-                        method="POST"
-                        class="mt-auto"
-                        style="width: 100%"
-                      >
-                      <input type="hidden" name="sku" th:value="${product.sku}" />
-                        <button type="submit" class="btn btn-danger">
-                          Delete
-                        </button>
-                      </form>
+        <div class="cards">
+            <div th:each="product : ${products}" class="card">
+              <img th:src="${product.images[0]}" class="card-img-top" alt="" />
+              <div class="card-body d-flex flex-column">
+                <h5 th:text="${product.name}" class="card-title"></h5>
+                <h5 th:text="'₹' + ${product.price}" class="card-title" style="color: rgb(53, 220, 53)"></h5>
+                <p th:utext="${product.shortDescription}" class="card-text"></p>
+                <div class="_card-bottom mt-auto">
+                  <a th:href="@{'/admin/update-product/' + ${product.SKU}}" type="button" class="btn btn-primary mt-auto cart-notif">
+                    <span class="material-symbols-outlined"> update </span>
+                    Update Product
+                  </a>
+          
+                  <button class="btn btn-danger mt-auto cart-notif" data-bs-toggle="modal" th:data-bs-target="'#exampleModal-' + ${product.SKU}">
+                    <span class="material-symbols-outlined"> delete </span>
+                    Delete Product
+                  </button>
+          
+                  <!-- Modal -->
+                  <div class="modal fade" th:id="'exampleModal-' + ${product.SKU}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h1 class="modal-title fs-5" id="exampleModalLabel">Confirm Deletion</h1>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                          Are you sure you want to delete the product:
+                        </div>
+                        <div th:text="'SKU: ' + ${product.SKU}" class="modal-body" style="font-size: larger"></div>
+                        <div th:text="'Name: ' + ${product.name}" class="modal-body" style="font-size: larger"></div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                          <form action="/admin/delete-product" method="POST" class="mt-auto" style="width: 100%">
+                            <input type="hidden" name="sku" th:value="${product.SKU}" />
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                          </form>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      </div>
+          
     </div>
   </body>
 </html>

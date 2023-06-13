@@ -3,15 +3,17 @@ package com.adnan.apparelstore.apparelstore.product;
 import java.util.List;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
 
 @Document(collection = "products")
 public class Product {
 
     @Id
-    @Field("sku")
-    private String sku;
+    private String id;
+
+    @Indexed(unique = true)
+    private String SKU;
     private int quantity;
     private String name;
     private String shortDescription;
@@ -19,17 +21,17 @@ public class Product {
     private int price;
     private List<String> categories;
     private List<String> images;
-    private List<String> sizes;
-    private List<String> colors;
+    private List<String> size;
+    private List<String> color;
 
 
 
     public Product() {
     }
 
-    public Product(String sku,int qty, String name, String shortDescription, String description, int price, List<String> categories, List<String> images, List<String> sizes, List<String> colors) {
+    public Product(String SKU,int qty, String name, String shortDescription, String description, int price, List<String> categories, List<String> images, List<String> size, List<String> color) {
         super();
-        this.sku = sku;
+        this.SKU = SKU;
         this.name = name;
         this.quantity = qty;
         this.shortDescription = shortDescription;
@@ -37,16 +39,24 @@ public class Product {
         this.price = price;
         this.categories = categories;
         this.images = images;
-        this.sizes = sizes;
-        this.colors = colors;
+        this.size = size;
+        this.color = color;
     }
 
-    public String getSku() {
-        return sku;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public void setSku(String sku) {
-        this.sku = sku;
+    public String getId() {
+        return id;
+    }
+
+    public String getSKU() {
+        return SKU;
+    }
+
+    public void setSKU(String SKU) {
+        this.SKU = SKU;
     }
 
     public String getName() {
@@ -97,20 +107,20 @@ public class Product {
         this.images = images;
     }
 
-    public List<String> getSizes() {
-        return sizes;
+    public List<String> getSize() {
+        return size;
     }
 
-    public void setSizes(List<String> sizes) {
-        this.sizes = sizes;
+    public void setSize(List<String> size) {
+        this.size = size;
     }
 
-    public List<String> getColors() {
-        return colors;
+    public List<String> getColor() {
+        return color;
     }
 
-    public void setColors(List<String> colors) {
-        this.colors = colors;
+    public void setColor(List<String> color) {
+        this.color = color;
     }
     
     public int getQuantity() {
@@ -123,9 +133,9 @@ public class Product {
 
     @Override
     public String toString() {
-        return "Product [ sku=" + sku + ", quantity=" + quantity + ", name=" + name
+        return "Product [ SKU=" + SKU + ", quantity=" + quantity + ", name=" + name
                 + ", shortDescription=" + shortDescription + ", description=" + description + ", price=" + price
-                + ", categories=" + categories + ", images=" + images + ", sizes=" + sizes + ", colors=" + colors + "]";
+                + ", categories=" + categories + ", images=" + images + ", size=" + size + ", color=" + color + "]";
     }
 
 

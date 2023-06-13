@@ -1,11 +1,8 @@
 package com.adnan.apparelstore.apparelstore.user;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,140 +11,62 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.adnan.apparelstore.apparelstore.product.Product;
-import com.adnan.apparelstore.apparelstore.product.ProductRepository;
-
 @RestController
 public class UserController {
 
     @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private ProductRepository productRepository;
+    private UserService userService;
 
     @GetMapping("/users")
-    public ResponseEntity<List<User>> getAllUsers() {
-        return ResponseEntity.ok(userRepository.findAll());
+    public List<User> getAllUsers() {
+        return userService.getAllUsers();
     }
 
     @PostMapping("/users")
-    public ResponseEntity<User> addUser(@RequestBody User user) {
-        return ResponseEntity.ok(userRepository.save(user));
+    public User addUser(@RequestBody User user) {
+        return userService.addUser(user);
     }
 
     @GetMapping("/users/{email}")
-    public ResponseEntity<User> getUserByEmail(@PathVariable String email) {
-        return ResponseEntity.ok(userRepository.findById(email).get());
+    public User getUserByEmail(@PathVariable String email) {
+        return userService.getUserByEmail(email);
     }
 
     @PutMapping("/users")
-    public ResponseEntity<User> updateUser(@RequestBody User user) {
-        return ResponseEntity.ok(userRepository.save(user));
+    public User updateUser(@RequestBody User user) {
+        return userService.updateUser(user);
     }
 
     @DeleteMapping("/users/{email}")
     public void deleteUser(@PathVariable String email) {
-        userRepository.deleteById(email);
+        userService.deleteUser(email);
     }
+
 
 
 
     @PostMapping("/users/{email}/cart/{sku}")
-    public ResponseEntity<String> addToCart(@PathVariable String email, @PathVariable String sku) {
-        User user = userRepository.findById(email).get();
-        List<CartItem> cart = user.getCart();
-
-        Optional<Product> productOptional = productRepository.findById(sku);     
-        
-        if (productOptional.isPresent()) {
-            Product product = productOptional.get();
-            String productsku = product.getSku();
-            boolean found = false;
-
-            if (cart == null) {
-                cart = new ArrayList<CartItem>();
-            }
-
-            for (CartItem cartItem : cart) {
-                if (cartItem.getSku().equals(productsku)) {
-                    cartItem.setQuantity(cartItem.getQuantity() + 1);
-                    found = true;
-                    break;
-                }
-            }
-
-            if (!found) {
-                CartItem cartItem = new CartItem(productsku,product.getName(),product.getImages().get(0),product.getPrice(),1);
-                cart.add(cartItem);
-            }
-
-            user.setCart(cart);
-
-            userRepository.save(user);
-
-            return ResponseEntity.ok("Added to cart");
-
-        }
-
-        return ResponseEntity.ok("Product not found");
+    public String addToCart(@PathVariable String email, @PathVariable String sku) {
+        return userService.addToCart(email, sku);
     }
 
     @DeleteMapping("/users/{email}/cart/{sku}")
-    public ResponseEntity<String> removeFromCart(@PathVariable String email, @PathVariable String sku) {
-        User user = userRepository.findById(email).get();
-        List<CartItem> cart = user.getCart();
+    public String removeFromCart(@PathVariable String email, @PathVariable String sku) {
 
-        if (cart == null) {
-            return ResponseEntity.ok("Cart is empty");
-        }
-
-        for (CartItem cartItem : cart) {
-            if (cartItem.getSku().equals(sku)) {
-                cart.remove(cartItem);
-                break;
-            }
-        }
-
-        user.setCart(cart);
-
-        userRepository.save(user);
-
-        return ResponseEntity.ok("Removed from cart");
+       return userService.removeFromCart(email, sku);
     }
 
     @PutMapping("/users/{email}/cart/{sku}")
-    public ResponseEntity<String> updateCart(@PathVariable String email, @PathVariable String sku) {
-        User user = userRepository.findById(email).get();
-        List<CartItem> cart = user.getCart();
+    public String updateCart(@PathVariable String email, @PathVariable String sku) {
+        
 
-        if (cart == null) {
-            return ResponseEntity.ok("Cart is empty");
-        }
-
-        for (CartItem cartItem : cart) {
-            if (cartItem.getSku().equals(sku)) {
-                cartItem.setQuantity(cartItem.getQuantity() - 1);
-                if (cartItem.getQuantity() == 0) {
-                    cart.remove(cartItem);
-                }
-                break;
-            }
-        }
-
-        user.setCart(cart);
-
-        userRepository.save(user);
-
-        return ResponseEntity.ok("Cart updated");
+        return userService.updateCart(email, sku);
     }
 
 
     @GetMapping("/users/{email}/cart")
-    public ResponseEntity<List<CartItem>> getUserCart(@PathVariable String email) {
-        User user = userRepository.findById(email).get();
-        List<CartItem> cart = user.getCart();
-       
-        return ResponseEntity.ok(cart);
+    public List<CartItem> getUserCart(@PathVariable String email) {
+        return userService.getUserCart(email);
     }
 
     // @GetMapping("/users/{email}/cart")

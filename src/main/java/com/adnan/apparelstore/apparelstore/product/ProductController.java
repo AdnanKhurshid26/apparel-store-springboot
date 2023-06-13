@@ -3,7 +3,6 @@ package com.adnan.apparelstore.apparelstore.product;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,27 +20,27 @@ public class ProductController {
 
     //get all products
     @GetMapping("/products")
-    public ResponseEntity<List<Product>> getAllProducts() {
-        return ResponseEntity.ok(productService.getAllProducts());
+    public List<Product> getAllProducts() {
+        return productService.getAllProducts();
     }
 
     //get product by sku
     @GetMapping("/products/{sku}")
-    public ResponseEntity<Product> getProductBySku(@PathVariable String sku) {
-        return ResponseEntity.ok(productService.getProductBySku(sku));
+    public Product getProductBySKU(@PathVariable String sku) {
+        return productService.getProductBySKU(sku);
     }
 
     //add product
     @PostMapping("/products")
-    public ResponseEntity<Product> addProduct(@RequestBody Product product) {
+    public Product addProduct(@RequestBody Product product) {
 
         Product addedProduct = productService.addProduct(product);
 
         if(addedProduct == null) {
-            return ResponseEntity.badRequest().build();
+            return null;
         }
 
-        return ResponseEntity.ok(addedProduct);
+        return addedProduct;
         
     }
 
@@ -52,8 +51,8 @@ public class ProductController {
     }
     //update product by sku
     @PutMapping("/products")
-    public ResponseEntity<Product> updateProduct( @RequestBody Product product) {
-        return ResponseEntity.ok(productService.updateProduct(product));
+    public Product updateProduct( @RequestBody Product product) {
+        return productService.updateProduct(product);
     }
 
 }

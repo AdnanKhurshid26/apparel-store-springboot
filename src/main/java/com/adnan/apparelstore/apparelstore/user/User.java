@@ -3,14 +3,14 @@ package com.adnan.apparelstore.apparelstore.user;
 import java.util.List;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
 
 @Document(collection = "users")
 public class User {
-
     @Id
-    @Field("email")
+    private String id;
+    @Indexed(unique = true)
     private String email;
     private String name;
     private String password;
@@ -27,6 +27,14 @@ public class User {
         this.password = password;
         this.addresses = addresses;
         this.cart = cart;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getId() {
+        return id;
     }
 
     public String getEmail() {
