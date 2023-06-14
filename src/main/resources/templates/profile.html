@@ -1,54 +1,75 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
+  <head>
     <div th:replace="fragments/imports"></div>
     <title>Profile</title>
-</head>
-<body>
-     
+  </head>
+  <body>
     <div th:replace="fragments/navbar"></div>
 
-      <div class="container form-container">
-        
-        
-        <form class="signup-form" action="/profile" method="post">
-            
-            <div class="input-field-signup">
-                <label for="">Email</label>
-                <input type="email" name="email" id="user-email" th:value="${user.email}" readonly style="border: solid 1px rgb(204, 204, 204);">
-            </div>
-            <div class="input-field-signup">
-                <label for="">Name</label>
-                <input type="text" name="name" id="username" th:value="${user.name}" required>
-            </div>
-            <div class="input-field-signup">
-                <label for="">Addresses</label>
-                <!-- <div th:each="product : ${products}" class="card" style="width: 18rem;"> -->
-                <input th:each="addr : ${user.addresses}" type="text" th:value="${addr}">
-                <input type="text" name="address" placeholder="Add new address">
-            </div>
-            <!-- <div class="input-field-signup">
+    <div class="container form-container">
+      <form class="signup-form" action="/profile" method="post">
+        <div class="input-field-signup">
+          <label for="">Email</label>
+          <input
+            type="email"
+            name="email"
+            id="user-email"
+            th:value="${user.email}"
+            readonly
+            style="border: solid 1px rgb(204, 204, 204); color: rgb(89, 89, 89)"
+          />
+        </div>
+        <div class="input-field-signup">
+          <label for="">Name</label>
+          <input
+            type="text"
+            name="name"
+            id="username"
+            th:value="${user.name}"
+            minlength="1"
+            required
+          />
+        </div>
+        <div class="input-field-signup">
+          <label for="">Addresses</label>
+          <!-- <div th:each="product : ${products}" class="card" style="width: 18rem;"> -->
+          <input
+            th:each="addr : ${user.addresses}"
+            type="text"
+            th:value="${addr}"
+          />
+          <input
+            type="text"
+            name="address"
+            placeholder="Add new address"
+            minlength="20"
+          />
+        </div>
+        <!-- <div class="input-field-signup">
                 <label for="">Confirm Password</label>
                 <input type="password" name="confirm-password" id="confirm-password" required>
             </div> -->
-            <div class="input-field-signup">
-                <button class="btn btn-primary cart-notif" style="width: 100%;" type="submit"><span class="material-symbols-outlined">
-                    upgrade
-                    </span>Update Profile</button>
-            </div>
-            <div class="input-field-signup ">
-                <a href="/logout" class="btn btn-danger cart-notif"  style="width: 100%;">
-                    <span class="material-symbols-outlined">
-                        logout
-                        </span>Sign out</a>
-            </div>
-        </form>
-
-        
-        
-      </div>
-
-   
-
-</body>
+        <div class="input-field-signup">
+          <button
+            class="btn btn-primary cart-notif"
+            style="width: 100%"
+            type="submit"
+          >
+            <span class="material-symbols-outlined"> upgrade </span>Update
+            Profile
+          </button>
+        </div>
+        <div class="input-field-signup">
+          <a
+            href="/logout"
+            class="btn btn-danger cart-notif"
+            style="width: 100%"
+          >
+            <span class="material-symbols-outlined"> logout </span>Sign out</a
+          >
+        </div>
+      </form>
+    </div>
+  </body>
 </html>

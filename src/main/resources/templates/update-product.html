@@ -13,18 +13,52 @@
           <div class="card card-cart mb-3">
             <div class="row g-0">
               <div class="col-md-4 cart-img-div">
-                <img th:src="${product.images[0]}" class="img-fluid rounded-start" alt="..." />
+                <img
+                  th:src="${product.images[0]}"
+                  class="img-fluid rounded-start"
+                  alt="..."
+                />
               </div>
               <div class="col-md-8 cart-body-div">
                 <div class="card-body">
-                    <span><b>SKU : </b><h6 th:text="${product.SKU}" class="card-title" style="display: inline-block;"></h6> </span>
-                    <span><b>Name : </b><h6 th:text="${product.name}" class="card-title"  style="display: inline-block;"></h6> </span>
+                  <span
+                    ><b>SKU : </b>
+                    <h6
+                      th:text="${product.SKU}"
+                      class="card-title"
+                      style="display: inline-block"
+                    ></h6>
+                  </span>
+                  <span
+                    ><b>Name : </b>
+                    <h6
+                      th:text="${product.name}"
+                      class="card-title"
+                      style="display: inline-block"
+                    ></h6>
+                  </span>
                   <div class="cart-card-row">
-                    <span><b>Price : </b><h6 th:text="'₹ ' + ${product.price}" class="card-title" style="color:rgb(53, 220, 53);display: inline-block;"></h6> </span>
-                    <span><b>Quantity : </b><p th:text="${product.quantity}" class="card-title" style="display: inline-block;"></p> </span>
+                    <span
+                      ><b>Price : </b>
+                      <h6
+                        th:text="'₹ ' + ${product.price}"
+                        class="card-title"
+                        style="color: rgb(53, 220, 53); display: inline-block"
+                      ></h6>
+                    </span>
+                    <span
+                      ><b>Quantity : </b>
+                      <p
+                        th:text="${product.quantity}"
+                        class="card-title"
+                        style="display: inline-block"
+                      ></p>
+                    </span>
                   </div>
-                  <p th:utext="'<b>Short Description : </b>' + ${product.shortDescription}" class="card-text"></p>
-        
+                  <p
+                    th:utext="'<b>Short Description : </b>' + ${product.shortDescription}"
+                    class="card-text"
+                  ></p>
                 </div>
               </div>
             </div>
@@ -32,7 +66,11 @@
         </div>
       </div>
       <div class="form-container">
-        <form action="/admin/update-product" method="POST" class="form-update-product">
+        <form
+          action="/admin/update-product"
+          method="POST"
+          class="form-update-product"
+        >
           <div class="mb-3">
             <label for="SKU" class="form-label">SKU</label>
             <input
@@ -50,8 +88,10 @@
               type="text"
               class="form-control"
               id="product-name"
-                name="name"
+              name="name"
               th:value="${product.name}"
+              required
+              minlength="6"
             />
           </div>
           <div class="mb-3">
@@ -60,7 +100,7 @@
               type="number"
               class="form-control"
               id="product-price"
-                name="price"
+              name="price"
               th:value="${product.price}"
               min="1"
             />
@@ -71,8 +111,9 @@
               type="number"
               class="form-control"
               id="product-price"
-                name="quantity"
-              th:value="${product.quantity}" min="1"
+              name="quantity"
+              th:value="${product.quantity}"
+              min="1"
             />
           </div>
           <div class="mb-3">
@@ -84,7 +125,10 @@
               class="form-control"
               id="product-shortDescription"
               th:value="${product.shortDescription}"
-                name="shortDescription"
+              name="shortDescription"
+              required
+              minlength="10"
+              maxlength="100"
             />
           </div>
           <div class="mb-3">
@@ -95,12 +139,10 @@
               class="form-control"
               id="product-description"
               rows="3"
-                name="description"
-                th:text="${product.description}"
+              name="description"
+              th:text="${product.description}"
             ></textarea>
           </div>
-
-          
 
           <div class="mb-3">
             <label for="product-categories" class="form-label"
@@ -124,7 +166,8 @@
               class="form-control"
               id="product-images"
               th:value="${#strings.arrayJoin(product.images, ',')}"
-                name="images"
+              name="images"
+              required
             />
             <div id="imagesHelpBlock" class="form-text">
               Enter image urls separated by comma

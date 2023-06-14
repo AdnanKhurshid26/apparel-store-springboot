@@ -24,12 +24,11 @@ public class Product {
     private List<String> size;
     private List<String> color;
 
-
-
     public Product() {
     }
 
-    public Product(String SKU,int qty, String name, String shortDescription, String description, int price, List<String> categories, List<String> images, List<String> size, List<String> color) {
+    public Product(String SKU, int qty, String name, String shortDescription, String description, int price,
+            List<String> categories, List<String> images, List<String> size, List<String> color) {
         super();
         this.SKU = SKU;
         this.name = name;
@@ -122,7 +121,7 @@ public class Product {
     public void setColor(List<String> color) {
         this.color = color;
     }
-    
+
     public int getQuantity() {
         return quantity;
     }
@@ -138,6 +137,4 @@ public class Product {
                 + ", categories=" + categories + ", images=" + images + ", size=" + size + ", color=" + color + "]";
     }
 
-
-    
 }

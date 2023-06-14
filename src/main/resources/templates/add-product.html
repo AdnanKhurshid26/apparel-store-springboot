@@ -22,6 +22,8 @@
               class="form-control"
               id="product-sku"
               name="SKU"
+              required
+              minlength=6
             />
           </div>
           <div class="mb-3">
@@ -31,7 +33,8 @@
               class="form-control"
               id="product-name"
                 name="name"
-          
+                required
+                minlength=6
             />
           </div>
           <div class="mb-3">
@@ -41,7 +44,7 @@
               class="form-control"
               id="product-price"
                 name="price"
-          
+              required
               min="1"
             />
           </div>
@@ -53,6 +56,7 @@
               id="product-price"
                 name="quantity"
           min="1"
+          required
             />
           </div>
           <div class="mb-3">
@@ -63,8 +67,10 @@
               type="text"
               class="form-control"
               id="product-shortDescription"
-            
                 name="shortDescription"
+                required
+              minlength=10
+              maxlength=100
             />
           </div>
           <div class="mb-3">
@@ -103,7 +109,7 @@
               type="text"
               class="form-control"
               id="product-images"
-         
+            required
                 name="images"
             />
             <div id="imagesHelpBlock" class="form-text">

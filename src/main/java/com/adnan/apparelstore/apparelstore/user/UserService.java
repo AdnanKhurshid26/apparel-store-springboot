@@ -10,10 +10,9 @@ import org.springframework.stereotype.Service;
 import com.adnan.apparelstore.apparelstore.product.Product;
 import com.adnan.apparelstore.apparelstore.product.ProductService;
 
-
 @Service
 public class UserService {
-    
+
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -32,7 +31,7 @@ public class UserService {
 
     public User addUser(User user) {
 
-        if(userRepository.findByEmail(user.getEmail()) != null) {
+        if (userRepository.findByEmail(user.getEmail()) != null) {
             return null;
         }
 
@@ -64,15 +63,13 @@ public class UserService {
 
     public String addToCart(String email, String sku) {
         User user = userRepository.findByEmail(email);
-     
-        List<CartItem> cart = user.getCart();
-  
 
-        Product product= productService.getProductBySKU(sku);
-        
-        
+        List<CartItem> cart = user.getCart();
+
+        Product product = productService.getProductBySKU(sku);
+
         if (product != null) {
-            
+
             String productSKU = product.getSKU();
             boolean found = false;
 
@@ -80,11 +77,10 @@ public class UserService {
                 cart = new ArrayList<CartItem>();
             }
             for (CartItem cartItem : cart) {
-                if(cartItem.getProduct()==null){
+                if (cartItem.getProduct() == null) {
                     cart.remove(cartItem);
-                }
-                else if (cartItem.getSku().equals(productSKU)) {
-                    if(product.getQuantity()<cartItem.getQuantity()+1){
+                } else if (cartItem.getSku().equals(productSKU)) {
+                    if (product.getQuantity() < cartItem.getQuantity() + 1) {
                         return "Not enough stock";
                     }
                     cartItem.setQuantity(cartItem.getQuantity() + 1);
@@ -107,7 +103,6 @@ public class UserService {
         return "Product not found";
 
     }
-
 
     public String removeFromCart(String email, String sku) {
         User user = userRepository.findByEmail(email);

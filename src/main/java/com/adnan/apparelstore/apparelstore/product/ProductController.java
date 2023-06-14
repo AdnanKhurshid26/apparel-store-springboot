@@ -18,8 +18,7 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
-
-    //get all products
+    // get all products
     @GetMapping("/products")
     public List<Product> getAllProducts() {
         return productService.getAllProducts();
@@ -30,34 +29,35 @@ public class ProductController {
         return productService.getPaginatedProducts(page, size);
     }
 
-    //get product by sku
+    // get product by sku
     @GetMapping("/products/{sku}")
     public Product getProductBySKU(@PathVariable String sku) {
         return productService.getProductBySKU(sku);
     }
 
-    //add product
+    // add product
     @PostMapping("/products")
     public Product addProduct(@RequestBody Product product) {
 
         Product addedProduct = productService.addProduct(product);
 
-        if(addedProduct == null) {
+        if (addedProduct == null) {
             return null;
         }
 
         return addedProduct;
-        
+
     }
 
-    //delete product by sku
+    // delete product by sku
     @DeleteMapping("/products/{sku}")
     public void deleteProduct(@PathVariable String sku) {
         productService.deleteProduct(sku);
     }
-    //update product by sku
+
+    // update product by sku
     @PutMapping("/products")
-    public Product updateProduct( @RequestBody Product product) {
+    public Product updateProduct(@RequestBody Product product) {
         return productService.updateProduct(product);
     }
 

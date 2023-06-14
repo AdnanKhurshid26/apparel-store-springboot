@@ -21,7 +21,7 @@ public class User {
     public User() {
     }
 
-    public User(String email, String name, String password,String role, List<String> addresses, List<CartItem> cart) {
+    public User(String email, String name, String password, String role, List<String> addresses, List<CartItem> cart) {
         super();
         this.email = email;
         this.name = name;
@@ -30,8 +30,6 @@ public class User {
         this.addresses = addresses;
         this.cart = cart;
     }
-
-    
 
     public void setId(String id) {
         this.id = id;
@@ -94,10 +92,5 @@ public class User {
         return "User [email=" + email + ", name=" + name + ", password=" + password + ", addresses=" + addresses
                 + ", cart=" + cart + "]";
     }
-
-   
-    
-
-   
 
 }

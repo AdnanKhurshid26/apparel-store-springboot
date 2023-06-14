@@ -7,20 +7,18 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-
 @Service
 public class ProductService {
-    
+
     @Autowired
     private ProductRepository productRepository;
-
 
     public List<Product> getAllProducts() {
         return productRepository.findAll();
     }
 
     public Page<Product> getPaginatedProducts(int page, int size) {
-       return productRepository.findAll(PageRequest.of(page, size));
+        return productRepository.findAll(PageRequest.of(page, size));
     }
 
     public Product getProductBySKU(String sku) {
@@ -29,7 +27,7 @@ public class ProductService {
 
     public Product addProduct(Product product) {
 
-        if(productRepository.findById(product.getSKU()).isPresent()) {
+        if (productRepository.findById(product.getSKU()).isPresent()) {
             return null;
         }
         return productRepository.save(product);
@@ -42,7 +40,7 @@ public class ProductService {
     public Product updateProduct(Product updatedProduct) {
         Product existingProduct = productRepository.findBySKU(updatedProduct.getSKU());
         if (existingProduct != null) {
-            updatedProduct.setId(existingProduct.getId()); 
+            updatedProduct.setId(existingProduct.getId());
             return productRepository.save(updatedProduct);
         } else {
             return null;

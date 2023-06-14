@@ -11,44 +11,20 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
-
-
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
-public class SecurityConfig  {
+public class SecurityConfig {
 
-    @Bean
-    public UserDetailsService userDetailsService(){
-        
+  @Bean
+  public UserDetailsService userDetailsService() {
 
-        return new customUserDetailsService();
-    }
+    return new customUserDetailsService();
+  }
 
-    @Bean
-    public BCryptPasswordEncoder passwordEncoder(){
-        return new BCryptPasswordEncoder();
-    }
-
-    // @Bean
-    // public DaoAuthenticationProvider authenticationProvider(){
-    //     DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
-    //     daoAuthenticationProvider.setUserDetailsService(this.userDetailsService(passwordEncoder()));
-    //     daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
-
-    //     return daoAuthenticationProvider;
-    // }
-
-   @Bean
-  public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-      return  http.csrf().disable()
-        .authorizeHttpRequests()
-        .requestMatchers("/**")
-        .permitAll()
-        .and()
-        .formLogin()
-        .and()
-        .build();
+  @Bean
+  public BCryptPasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder();
   }
 
   @Bean
@@ -59,6 +35,16 @@ public class SecurityConfig  {
     return provider;
   }
 
-}
-    
+  @Bean
+  public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    return http.csrf().disable()
+        .authorizeHttpRequests()
+        .requestMatchers("/**")
+        .permitAll()
+        .and()
+        .formLogin()
+        .and()
+        .build();
+  }
 
+}

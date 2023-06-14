@@ -12,12 +12,12 @@ import com.adnan.apparelstore.apparelstore.user.UserRepository;
 @Component
 public class customUserDetailsService implements UserDetailsService {
 
-    @Autowired  
+    @Autowired
     private UserRepository userRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        
+
         User user = userRepository.findByEmail(username);
 
         if (user == null) {
@@ -26,5 +26,5 @@ public class customUserDetailsService implements UserDetailsService {
 
         return new CustomUserDetails(user);
     }
-    
+
 }
