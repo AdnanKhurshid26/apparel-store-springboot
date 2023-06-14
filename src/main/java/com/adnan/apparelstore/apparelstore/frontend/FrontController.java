@@ -1,6 +1,7 @@
 package com.adnan.apparelstore.apparelstore.frontend;
 
 
+import java.security.Principal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.client.RestTemplate;
 
 import com.adnan.apparelstore.apparelstore.product.Product;
@@ -28,6 +30,7 @@ import jakarta.validation.Valid;
 
 
 @Controller
+@SessionAttributes({"username"})
 public class FrontController {
 
    @Autowired
@@ -36,18 +39,23 @@ public class FrontController {
    
     @GetMapping("/")
     @PreAuthorize("hasAuthority('USER')")
-    public String home(Model model,@RequestParam(value = "size",defaultValue = "8") int size,@RequestParam(value = "page",defaultValue = "0") int page) {
+    public String home(Model model,@RequestParam(value = "size",defaultValue = "8") int size,@RequestParam(value = "page",defaultValue = "0") int page,Principal principal) {
        
         Page<Product> prods = frontService.getPaginatedProducts(page, size);
         List<Product> products = prods.getContent();
         int totalPages = prods.getTotalPages();
         int currentPage = prods.getNumber();
+        String username = principal.getName();
+        User user = frontService.getUserProfile(username);
+        model.addAttribute("user", user);
+        model.addAttribute("username", username);
         System.out.println("totalPages: "+totalPages);
         System.out.println("currentPage: "+currentPage);
         model.addAttribute("products", products);
         model.addAttribute("currentPage", currentPage);
         model.addAttribute("totalPages", totalPages);
-        model.addAttribute("pageSize", size);   
+        model.addAttribute("pageSize", size); 
+        model.addAttribute("addSearchBar",true);
         return "home";
     }
 
@@ -56,33 +64,38 @@ public class FrontController {
     public String profile(Model model) {
 
         //call api /products to get user profile
-
-        User user = frontService.getUserProfile();
+        String username = (String) model.getAttribute("username");
+        User user = frontService.getUserProfile(username);
         model.addAttribute("user", user);
         return "profile";
     }
 
     @PostMapping("/profile")
     @PreAuthorize("hasAuthority('USER')")
-    public String updateProfile(@Valid User user) {
+    public String updateProfile(@RequestParam String email,@RequestParam String name,@RequestParam String address) {
 
         //call api /products to get user profile
-        frontService.updateProfile(user);
+        frontService.updateProfile(email,name,address);
         return "redirect:/profile";
     }
 
     @PostMapping("/add-to-cart")
     @PreAuthorize("hasAuthority('USER')")
-    public String addToCart(@RequestParam String SKU,@RequestParam int page) {
-
-        frontService.addToCart(SKU);
+    public String addToCart(Model model,@RequestParam String SKU,@RequestParam int page) {
+        String username = (String) model.getAttribute("username");
+        User user = frontService.getUserProfile(username);
+        model.addAttribute("user", user);
+        frontService.addToCart(SKU,username);
         return "redirect:/?page="+page;
     }
 
     @PostMapping("/remove-from-cart")
     @PreAuthorize("hasAuthority('USER')")
-    public String removeFromCart(@RequestParam String sku) {
-        frontService.removeFromCart(sku);
+    public String removeFromCart(@RequestParam String sku,Model model) {
+        String username = (String) model.getAttribute("username");
+        frontService.removeFromCart(sku,username);
+        User user = frontService.getUserProfile(username);
+        model.addAttribute("user", user);
         return "redirect:/cart";
     }
     
@@ -91,8 +104,8 @@ public class FrontController {
     public String cart(Model model) {
 
         //call api /products to get user profile
-        
-        List<CartItem> cartitems = frontService.getCart();
+        String username = (String) model.getAttribute("username");
+        List<CartItem> cartitems = frontService.getCart(username);
 
         //print name of products referred to byb cart item
 
@@ -101,7 +114,8 @@ public class FrontController {
         List<CartItem> cart = frontService.removeNullCartItem(cartitems);
 
         int total =  frontService.getCartTotal(cart);
-
+        User user = frontService.getUserProfile(username);
+        model.addAttribute("user", user);
         model.addAttribute("cart", cart);
         model.addAttribute("total", total);
             return "cart";
@@ -110,7 +124,10 @@ public class FrontController {
     @GetMapping("/inc-cart-qty")
     @PreAuthorize("hasAuthority('USER')")
     public String incCartQty(@RequestParam String sku,Model model) {
-        String message = frontService.incCartQty(sku);
+        String username = (String) model.getAttribute("username");
+        String message = frontService.incCartQty(sku,username);
+        User user = frontService.getUserProfile(username);
+        model.addAttribute("user", user);
         model.addAttribute("message", message);
         return "redirect:/cart";
     }
@@ -118,8 +135,10 @@ public class FrontController {
     @GetMapping("/dec-cart-qty")
     @PreAuthorize("hasAuthority('USER')")
     public String decCartQty(@RequestParam String sku,Model model) {
-
-        String message =  frontService.decCartQty(sku);        
+        String username = (String) model.getAttribute("username");
+        String message =  frontService.decCartQty(sku,username);
+        User user = frontService.getUserProfile(username);
+        model.addAttribute("user", user);        
         model.addAttribute("message", message);
         return "redirect:/cart";
     }
@@ -141,6 +160,7 @@ public class FrontController {
         model.addAttribute("currentPage", currentPage);
         model.addAttribute("totalPages", totalPages);
         model.addAttribute("pageSize", size);   
+        model.addAttribute("addSearchBar",true);
         return "admin";
     }
 
@@ -170,7 +190,6 @@ public class FrontController {
     public String updateProduct(@Valid Product product) {
 
         frontService.updateProduct(product);
-
         return "redirect:/admin";
     }
 

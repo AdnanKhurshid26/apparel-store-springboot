@@ -39,6 +39,7 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         user.setRole("USER");
+        user.setAddresses(new ArrayList<>());
 
         return userRepository.save(user);
     }
