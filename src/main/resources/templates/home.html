@@ -27,9 +27,10 @@
             >
               <input type="hidden" name="SKU" th:value="${product.SKU}" />
               <input type="hidden" name="page" th:value="${currentPage}" />
-              <button type="submit" class="btn btn-primary mt-auto">
-                Add to Cart
-              </button>
+              <button type="submit" class="btn btn-primary mt-auto"
+        th:text="${product.quantity > 0 ? 'Add to Cart' : 'Out of Stock'}"
+        th:disabled="${product.quantity == 0}">
+</button>
             </form>
           </div>
         </div>

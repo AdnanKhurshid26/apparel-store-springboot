@@ -63,9 +63,12 @@ public class UserService {
 
     public String addToCart(String email, String sku) {
         User user = userRepository.findByEmail(email);
+     
         List<CartItem> cart = user.getCart();
+  
 
         Product product= productService.getProductBySKU(sku);
+        
         
         if (product != null) {
             
@@ -76,14 +79,22 @@ public class UserService {
                 cart = new ArrayList<CartItem>();
             }
             for (CartItem cartItem : cart) {
-                if (cartItem.getSku().equals(productSKU)) {
+                if(cartItem.getProduct()==null){
+                    cart.remove(cartItem);
+                }
+                else if (cartItem.getSku().equals(productSKU)) {
+                    if(product.getQuantity()<cartItem.getQuantity()+1){
+                        return "Not enough stock";
+                    }
                     cartItem.setQuantity(cartItem.getQuantity() + 1);
                     found = true;
                     break;
                 }
             }
             if (!found) {
-                CartItem cartItem = new CartItem(productSKU,product.getName(),product.getImages().get(0),product.getPrice(),1);
+                CartItem cartItem = new CartItem();
+                cartItem.setProduct(product);
+                cartItem.setQuantity(1);
                 cart.add(cartItem);
             }
             user.setCart(cart);

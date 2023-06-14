@@ -84,7 +84,14 @@ public class FrontController {
 
         //call api /products to get user profile
         
-        List<CartItem> cart = frontService.getCart();
+        List<CartItem> cartitems = frontService.getCart();
+
+        //print name of products referred to byb cart item
+
+        //remove cartItem from cart if product is null
+
+        List<CartItem> cart = frontService.removeNullCartItem(cartitems);
+
         int total =  frontService.getCartTotal(cart);
 
         model.addAttribute("cart", cart);
@@ -93,14 +100,17 @@ public class FrontController {
     }
 
     @GetMapping("/inc-cart-qty")
-    public String incCartQty(@RequestParam String sku) {
-        frontService.incCartQty(sku);
+    public String incCartQty(@RequestParam String sku,Model model) {
+        String message = frontService.incCartQty(sku);
+        model.addAttribute("message", message);
         return "redirect:/cart";
     }
 
     @GetMapping("/dec-cart-qty")
-    public String decCartQty(@RequestParam String sku) {
-        frontService.decCartQty(sku);        
+    public String decCartQty(@RequestParam String sku,Model model) {
+
+        String message =  frontService.decCartQty(sku);        
+        model.addAttribute("message", message);
         return "redirect:/cart";
     }
 

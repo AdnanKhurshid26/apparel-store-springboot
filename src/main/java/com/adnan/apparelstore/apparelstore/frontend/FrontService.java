@@ -1,6 +1,7 @@
 package com.adnan.apparelstore.apparelstore.frontend;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -114,13 +115,16 @@ public class FrontService {
         ResponseEntity<List<CartItem>> response = exchange(url, getMethod, requestEntity, responseType);
         List<CartItem> cart = response.getBody();
 
+       
         return cart;
     }
 
     public int getCartTotal(List<CartItem> cart) {
         int total = 0;
         for (CartItem cartItem : cart) {
-            total += cartItem.getQuantity() * cartItem.getPrice();
+            int price=0; 
+            if(cartItem.getProduct()!=null) price = cartItem.getProduct().getPrice();
+            total += cartItem.getQuantity() * price ;
         }
         return total;
     }
@@ -177,6 +181,16 @@ public class FrontService {
         String message = response.getBody();
 
         return message;
+    }
+
+    public List<CartItem> removeNullCartItem(List<CartItem> cart) {
+        List<CartItem> newCart = new ArrayList<>();
+        for (CartItem cartItem : cart) {
+            if(cartItem != null) {
+                newCart.add(cartItem);
+            }
+        }
+        return newCart;
     }
 
    

@@ -16,38 +16,35 @@
        
        <div class="cart-container">
             <div class="cart-cards">
-                <div th:each="cartitem : ${cart}" class="card card-cart mb-3">
-                    <div class="row g-0">
-                      <div class="col-md-4 cart-img-div">
-                        <img th:src="${cartitem.imageUrl}" class="img-fluid rounded-start" alt="...">
-                      </div>
-                      <div class="col-md-8 cart-body-div">
-                        <div class="card-body">
-                          <h5 th:text="${cartitem.name}" class="card-title"></h5>
-                          <div class="cart-card-row">
-                            <span>Price : <h6 th:text="'₹ ' + ${cartitem.price}" class="card-title" style="color:rgb(53, 220, 53);display: inline-block;"></h6> </span>
-                            <span>
-                                Qty :  
-                                <div class="btn-group" role="group" aria-label="Basic outlined example">
-                                    <a th:href="@{dec-cart-qty(sku=${cartitem.sku})}" type="button" class="btn btn-outline-primary">-</a>
-                                    <button th:text="${cartitem.quantity}" type="button" class="btn btn-outline" style="border-top: 1px solid black; border-bottom:1px solid black ;" aria-readonly="true"></button>
-                                    <a th:href="@{inc-cart-qty(sku=${cartitem.sku})}" type="button" class="btn btn-outline-primary">+</a>
-                                </div>
-                            </span> 
+              <div th:each="cartitem : ${cart}" th:if="${cartitem.product != null}" class="card card-cart mb-3">
+                <div class="row g-0">
+                  <div class="col-md-4 cart-img-div">
+                    <img th:src="${cartitem.product.images[0]}" class="img-fluid rounded-start" alt="...">
+                  </div>
+                  <div class="col-md-8 cart-body-div">
+                    <div class="card-body">
+                      <h5 th:text="${cartitem.product.name}" class="card-title"></h5>
+                      <div class="cart-card-row">
+                        <span>Price: <h6 th:text="'₹ ' + ${cartitem.product.price}" class="card-title" style="color:rgb(53, 220, 53);display: inline-block;"></h6></span>
+                        <span>
+                          Qty:
+                          <div class="btn-group" role="group" aria-label="Basic outlined example">
+                            <a th:href="@{dec-cart-qty(sku=${cartitem.product.SKU})}" type="button" class="btn btn-outline-primary">-</a>
+                            <button th:text="${cartitem.quantity}" type="button" class="btn btn-outline" style="border-top: 1px solid black; border-bottom:1px solid black ;" aria-readonly="true"></button>
+                            <a th:href="@{inc-cart-qty(sku=${cartitem.product.SKU})}" type="button" class="btn btn-outline-primary">+</a>
                           </div>
-                          <span>Subtotal : <h6 th:text="'₹ ' + ${cartitem.price*cartitem.quantity}" class="card-title" style="color:rgb(53, 220, 53);display: inline-block;"></h6></span>
-                          <form action="/remove-from-cart" method="POST" style="align-self: flex-end;">
-                            <input type="hidden" name="sku" th:value="${cartitem.sku}">
-                            <button type="submit" class="btn btn-danger">Remove from cart</button>
-                          </form>
-                        </div>
+                        </span>
                       </div>
-
-                      
-
-                      
+                      <span>Subtotal: <h6 th:text="'₹ ' + ${cartitem.product.price * cartitem.quantity}" class="card-title" style="color:rgb(53, 220, 53);display: inline-block;"></h6></span>
+                      <form action="/remove-from-cart" method="POST" style="align-self: flex-end;">
+                        <input type="hidden" name="sku" th:value="${cartitem.product.SKU}">
+                        <button type="submit" class="btn btn-danger">Remove from cart</button>
+                      </form>
                     </div>
                   </div>
+                </div>
+              </div>
+              
             </div>
         
        </div>
