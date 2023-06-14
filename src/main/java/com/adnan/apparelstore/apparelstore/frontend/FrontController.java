@@ -33,7 +33,9 @@ public class FrontController {
    @Autowired
    private FrontService frontService;
     
+   
     @GetMapping("/")
+    @PreAuthorize("hasAuthority('USER')")
     public String home(Model model,@RequestParam(value = "size",defaultValue = "8") int size,@RequestParam(value = "page",defaultValue = "0") int page) {
        
         Page<Product> prods = frontService.getPaginatedProducts(page, size);
@@ -50,6 +52,7 @@ public class FrontController {
     }
 
     @GetMapping("/profile")
+    @PreAuthorize("hasAuthority('USER')")
     public String profile(Model model) {
 
         //call api /products to get user profile
@@ -60,6 +63,7 @@ public class FrontController {
     }
 
     @PostMapping("/profile")
+    @PreAuthorize("hasAuthority('USER')")
     public String updateProfile(@Valid User user) {
 
         //call api /products to get user profile
@@ -68,6 +72,7 @@ public class FrontController {
     }
 
     @PostMapping("/add-to-cart")
+    @PreAuthorize("hasAuthority('USER')")
     public String addToCart(@RequestParam String SKU,@RequestParam int page) {
 
         frontService.addToCart(SKU);
@@ -75,12 +80,14 @@ public class FrontController {
     }
 
     @PostMapping("/remove-from-cart")
+    @PreAuthorize("hasAuthority('USER')")
     public String removeFromCart(@RequestParam String sku) {
         frontService.removeFromCart(sku);
         return "redirect:/cart";
     }
     
     @GetMapping("/cart")
+    @PreAuthorize("hasAuthority('USER')")
     public String cart(Model model) {
 
         //call api /products to get user profile
@@ -101,6 +108,7 @@ public class FrontController {
     }
 
     @GetMapping("/inc-cart-qty")
+    @PreAuthorize("hasAuthority('USER')")
     public String incCartQty(@RequestParam String sku,Model model) {
         String message = frontService.incCartQty(sku);
         model.addAttribute("message", message);
@@ -108,6 +116,7 @@ public class FrontController {
     }
 
     @GetMapping("/dec-cart-qty")
+    @PreAuthorize("hasAuthority('USER')")
     public String decCartQty(@RequestParam String sku,Model model) {
 
         String message =  frontService.decCartQty(sku);        
@@ -118,8 +127,8 @@ public class FrontController {
 
     //Admin routes
 
-    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/admin")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public String admin(Model model,@RequestParam(value = "size",defaultValue = "8") int size,@RequestParam(value = "page",defaultValue = "0") int page) {
        
         Page<Product> prods = frontService.getPaginatedProducts(page, size);
@@ -135,8 +144,9 @@ public class FrontController {
         return "admin";
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    
     @PostMapping("/admin/delete-product")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public String deleteProduct(@RequestParam String sku) {
 
         frontService.deleteProduct(sku);
@@ -144,8 +154,9 @@ public class FrontController {
         return "redirect:/admin";
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    
     @GetMapping("/admin/update-product/{sku}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public String addProduct(@PathVariable String sku,Model model) {
 
         Product product = frontService.getProductBySKU(sku);
@@ -153,8 +164,9 @@ public class FrontController {
         return "update-product";
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+ 
     @PostMapping("/admin/update-product")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public String updateProduct(@Valid Product product) {
 
         frontService.updateProduct(product);
@@ -162,14 +174,16 @@ public class FrontController {
         return "redirect:/admin";
     }
 
-@PreAuthorize("hasRole('ADMIN')")
+
     @GetMapping("/admin/add-product")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public String addProduct() {
 
         return "add-product";
     }
-    @PreAuthorize("hasRole('ADMIN')")
+    
     @PostMapping("/admin/add-product")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public String addProduct(@Valid Product product) {
 
          RestTemplate restTemplate = new RestTemplate();

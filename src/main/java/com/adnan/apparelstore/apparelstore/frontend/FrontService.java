@@ -67,7 +67,7 @@ public class FrontService {
     }
 
     public User getUserProfile() {
-        String url = sourceurl + "/users/adnan@gmail";
+        String url = sourceurl + "/users/adnan@gmail.com";
         HttpEntity<?> requestEntity = null;
         ParameterizedTypeReference<User> responseType = new ParameterizedTypeReference<User>() {};
         ResponseEntity<User> response = exchange(url, getMethod, requestEntity, responseType);
@@ -89,7 +89,7 @@ public class FrontService {
     }
 
     public String addToCart(String sku) {
-        String url = sourceurl + "/users/adnan@gmail/cart/"+sku;
+        String url = sourceurl + "/users/adnan@gmail.com/cart/"+sku;
         HttpEntity<?> requestEntity = null;
         ParameterizedTypeReference<String> responseType = new ParameterizedTypeReference<String>() {};
         ResponseEntity<String> response = exchange(url, postMethod, requestEntity, responseType);
@@ -99,7 +99,7 @@ public class FrontService {
     }
 
     public String removeFromCart(String sku) {
-        String url = sourceurl + "/users/adnan@gmail/cart/"+sku;
+        String url = sourceurl + "/users/adnan@gmail.com/cart/"+sku;
         HttpEntity<?> requestEntity = null;
         ParameterizedTypeReference<String> responseType = new ParameterizedTypeReference<String>() {};
         ResponseEntity<String> response = exchange(url, deleteMethod, requestEntity, responseType);
@@ -109,7 +109,7 @@ public class FrontService {
     }
 
     public List<CartItem> getCart() {
-        String url = sourceurl + "/users/adnan@gmail/cart";
+        String url = sourceurl + "/users/adnan@gmail.com/cart";
         HttpEntity<?> requestEntity = null;
         ParameterizedTypeReference<List<CartItem>> responseType = new ParameterizedTypeReference<List<CartItem>>() {};
         ResponseEntity<List<CartItem>> response = exchange(url, getMethod, requestEntity, responseType);
@@ -130,7 +130,7 @@ public class FrontService {
     }
 
     public String incCartQty(String sku) {
-        String url = sourceurl + "/users/adnan@gmail/cart/"+sku;
+        String url = sourceurl + "/users/adnan@gmail.com/cart/"+sku;
         HttpEntity<?> requestEntity = null;
         ParameterizedTypeReference<String> responseType = new ParameterizedTypeReference<String>() {};
         ResponseEntity<String> response = exchange(url, postMethod, requestEntity, responseType);
@@ -140,7 +140,7 @@ public class FrontService {
     }
 
     public String decCartQty(String sku) {
-        String url = sourceurl + "/users/adnan@gmail/cart/"+sku;
+        String url = sourceurl + "/users/adnan@gmail.com/cart/"+sku;
         HttpEntity<?> requestEntity = null;
         ParameterizedTypeReference<String> responseType = new ParameterizedTypeReference<String>() {};
         ResponseEntity<String> response = exchange(url, putMethod, requestEntity, responseType);

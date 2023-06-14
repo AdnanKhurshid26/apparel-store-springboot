@@ -4,24 +4,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Component;
 
 import com.adnan.apparelstore.apparelstore.user.User;
 import com.adnan.apparelstore.apparelstore.user.UserRepository;
 
-public class UserDetailsServiceImpl implements UserDetailsService {
+@Component
+public class customUserDetailsService implements UserDetailsService {
 
-    @Autowired
+    @Autowired  
     private UserRepository userRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         
         User user = userRepository.findByEmail(username);
-        
-        if(user == null) {
+
+        if (user == null) {
             throw new UsernameNotFoundException("User not found");
         }
-        
+
         return new CustomUserDetails(user);
     }
     
