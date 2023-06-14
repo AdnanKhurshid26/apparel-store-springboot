@@ -2,20 +2,36 @@ package com.adnan.apparelstore.apparelstore.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
+
+
 @Configuration
+@EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig  {
 
     @Bean
-    public UserDetailsService getUserDetailsService() {
-        return new UserDetailsServiceImpl();
+    public UserDetailsService userDetailsService(BCryptPasswordEncoder encoder){
+        UserDetails admin = User.withUsername("admin")
+                .password(encoder.encode("admin"))
+                .roles("ADMIN")
+                .build();
+
+        UserDetails user = User.withUsername("user")
+                .password(encoder.encode("user"))
+                .roles("USER")
+                .build();
+
+        return new InMemoryUserDetailsManager(admin, user);
     }
 
     @Bean
@@ -23,24 +39,27 @@ public class SecurityConfig  {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
-    public DaoAuthenticationProvider authenticationProvider(){
-        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
-        daoAuthenticationProvider.setUserDetailsService(this.getUserDetailsService());
-        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
+    // @Bean
+    // public DaoAuthenticationProvider authenticationProvider(){
+    //     DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
+    //     daoAuthenticationProvider.setUserDetailsService(this.userDetailsService(passwordEncoder()));
+    //     daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
 
-        return daoAuthenticationProvider;
-    }
+    //     return daoAuthenticationProvider;
+    // }
 
    @Bean
-   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-       http.authorizeRequests()
-       .requestMatchers("/**").permitAll()
-       .and().formLogin()
-       .and().csrf().disable();
-       return http.build();
-   }
+  public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+      return  http.csrf().disable()
+        .authorizeHttpRequests()
+        .requestMatchers("/**")
+        .permitAll()
+        .and()
+        .formLogin()
+        .and()
+        .build();
+  }
 
-
-    
 }
+    
+

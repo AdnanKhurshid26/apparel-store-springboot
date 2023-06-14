@@ -11,6 +11,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -117,6 +118,7 @@ public class FrontController {
 
     //Admin routes
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/admin")
     public String admin(Model model,@RequestParam(value = "size",defaultValue = "8") int size,@RequestParam(value = "page",defaultValue = "0") int page) {
        
@@ -133,7 +135,7 @@ public class FrontController {
         return "admin";
     }
 
-
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/admin/delete-product")
     public String deleteProduct(@RequestParam String sku) {
 
@@ -142,6 +144,7 @@ public class FrontController {
         return "redirect:/admin";
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/admin/update-product/{sku}")
     public String addProduct(@PathVariable String sku,Model model) {
 
@@ -150,6 +153,7 @@ public class FrontController {
         return "update-product";
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/admin/update-product")
     public String updateProduct(@Valid Product product) {
 
@@ -158,12 +162,13 @@ public class FrontController {
         return "redirect:/admin";
     }
 
+@PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/admin/add-product")
     public String addProduct() {
 
         return "add-product";
     }
-
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/admin/add-product")
     public String addProduct(@Valid Product product) {
 
