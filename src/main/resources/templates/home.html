@@ -31,7 +31,7 @@
                 type="submit"
                 class="btn btn-primary mt-auto"
                 th:text="${product.quantity > 0 ? 'Add to Cart' : 'Out of Stock'}"
-                th:disabled="${product.quantity == 0}"
+                th:disabled="${product.quantity le 0}"
               ></button>
             </form>
           </div>

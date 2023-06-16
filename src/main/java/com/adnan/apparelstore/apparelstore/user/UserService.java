@@ -86,9 +86,6 @@ public class UserService {
             String productSKU = product.getSKU();
             boolean found = false;
 
-            if (cart == null) {
-                cart = new ArrayList<CartItem>();
-            }
             for (CartItem cartItem : cart) {
                 if (cartItem.getProduct() == null) {
                     cart.remove(cartItem);
@@ -102,6 +99,9 @@ public class UserService {
                 }
             }
             if (!found) {
+                if (product.getQuantity() < 1) {
+                    return "Not enough stock";
+                }
                 CartItem cartItem = new CartItem();
                 cartItem.setProduct(product);
                 cartItem.setQuantity(1);

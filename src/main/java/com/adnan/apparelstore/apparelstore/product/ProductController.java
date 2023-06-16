@@ -107,37 +107,4 @@ public class ProductController {
         return "redirect:/admin";
     }
 
-    //////////////////////////////////////////////////////////////
-
-    // get all products
-    @GetMapping("/products")
-    public List<Product> getAllProducts() {
-        return productService.getAllProducts();
-    }
-
-    @GetMapping("/products/{page}/{size}")
-    public Page<Product> getPaginatedProducts(@PathVariable int page, @PathVariable int size) {
-        return productService.getPaginatedProducts(page, size);
-    }
-
-    // get product by sku
-    @GetMapping("/products/{sku}")
-    public Product getProductBySKU(@PathVariable String sku) {
-        return productService.getProductBySKU(sku);
-    }
-
-    // add product
-
-    // // delete product by sku
-    // @DeleteMapping("/products/{sku}")
-    // public void deleteProduct(@PathVariable String sku) {
-    // productService.deleteProduct(sku);
-    // }
-
-    // update product by sku
-    // @PutMapping("/products")
-    // public Product updateProduct(@RequestBody Product product) {
-    // return productService.updateProduct(product);
-    // }
-
 }
