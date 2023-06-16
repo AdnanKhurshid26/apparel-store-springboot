@@ -39,7 +39,20 @@ public class UserService {
 
         user.setRole("USER");
         user.setAddresses(new ArrayList<>());
+        user.setCart(new ArrayList<>());
 
+        return userRepository.save(user);
+    }
+
+    public User updateProfile(String username, String name, String address) {
+        User user = userRepository.findByEmail(username);
+        user.setName(name);
+        List<String> addresses = user.getAddresses();
+        if (addresses == null) {
+            addresses = new ArrayList<String>();
+        }
+        addresses.add(address);
+        user.setAddresses(addresses);
         return userRepository.save(user);
     }
 
@@ -150,9 +163,49 @@ public class UserService {
         return "Cart updated";
     }
 
+    public List<CartItem> removeNullCartItem(List<CartItem> cart) {
+        List<CartItem> newCart = new ArrayList<>();
+        for (CartItem cartItem : cart) {
+            if (cartItem != null) {
+                newCart.add(cartItem);
+            }
+        }
+        return newCart;
+    }
+
+    public int getCartTotal(List<CartItem> cart) {
+        int total = 0;
+        for (CartItem cartItem : cart) {
+            int price = 0;
+            if (cartItem.getProduct() != null)
+                price = cartItem.getProduct().getPrice();
+            total += cartItem.getQuantity() * price;
+        }
+        return total;
+    }
+
     public List<CartItem> getUserCart(String email) {
         User user = userRepository.findByEmail(email);
-        return user.getCart();
+        List<CartItem> cart = user.getCart();
+        List<CartItem> newCart = removeNullCartItem(cart);
+        return newCart;
+    }
+
+    public String check(String email) {
+
+        List<CartItem> cart = getUserCart(email);
+
+        for (CartItem cartItem : cart) {
+            Product product = cartItem.getProduct();
+            String sku = product.getSKU();
+            int quantity = cartItem.getQuantity();
+            product.setQuantity(product.getQuantity() - quantity);
+            productService.updateProduct(product);
+            removeFromCart(email, sku);
+        }
+
+        return "Checked out";
+
     }
 
 }

@@ -1,90 +1,66 @@
 package com.adnan.apparelstore.apparelstore.frontend;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import com.adnan.apparelstore.apparelstore.product.Product;
 import com.adnan.apparelstore.apparelstore.product.ProductRepository;
 import com.adnan.apparelstore.apparelstore.user.CartItem;
 import com.adnan.apparelstore.apparelstore.user.User;
+import com.adnan.apparelstore.apparelstore.user.UserRepository;
+import com.adnan.apparelstore.apparelstore.user.UserService;
 
 @Service
 public class FrontService {
 
     @Autowired
     private ProductRepository productRepository;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private UserService userService;
 
-    private RestTemplate restTemplate = new RestTemplate();
-    private String sourceurl = "http://localhost:8080";
-    private HttpMethod getMethod = HttpMethod.GET;
-    private HttpMethod postMethod = HttpMethod.POST;
-    private HttpMethod putMethod = HttpMethod.PUT;
-    private HttpMethod deleteMethod = HttpMethod.DELETE;
-
-    public <T> ResponseEntity<T> exchange(String url, HttpMethod method, HttpEntity<?> requestEntity,
-            ParameterizedTypeReference<T> responseType) {
-        return restTemplate.exchange(url, method, requestEntity, responseType);
-    }
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
 
     public List<Product> getAllProducts() {
-        String url = sourceurl + "/products";
-        HttpEntity<?> requestEntity = null;
-        ParameterizedTypeReference<List<Product>> responseType = new ParameterizedTypeReference<List<Product>>() {
-        };
-        ResponseEntity<List<Product>> response = exchange(url, getMethod, requestEntity, responseType);
-        List<Product> products = response.getBody();
+
+        List<Product> products = productRepository.findAll();
 
         return products;
     }
 
     public Page<Product> getPaginatedProducts(int page, int size) {
 
-        Page<Product> products = productRepository.findAll(PageRequest.of(page, size));
+        Page<Product> products = productRepository.findAll(PageRequest.of(page,
+                size));
 
         return products;
     }
 
     public Product getProductBySKU(String sku) {
-        String url = sourceurl + "/products/" + sku;
-        HttpEntity<?> requestEntity = null;
-        ParameterizedTypeReference<Product> responseType = new ParameterizedTypeReference<Product>() {
-        };
-        ResponseEntity<Product> response = exchange(url, getMethod, requestEntity, responseType);
-        Product product = response.getBody();
+
+        Product product = productRepository.findBySKU(sku);
 
         return product;
     }
 
-    public User getUserProfile(String username) {
-        String url = sourceurl + "/users/" + username;
-        HttpEntity<?> requestEntity = null;
-        ParameterizedTypeReference<User> responseType = new ParameterizedTypeReference<User>() {
-        };
-        ResponseEntity<User> response = exchange(url, getMethod, requestEntity, responseType);
-        User user = response.getBody();
+    public User getUserProfile(Principal principal) {
+        String email = principal.getName();
 
-        return user;
+        return userRepository.findByEmail(email);
     }
 
     public String updateProfile(String username, String name, String address) {
-        String url = sourceurl + "/users";
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        User user = getUserProfile(username);
+        User user = userRepository.findByEmail(username);
         user.setName(name);
-
         List<String> addresses = user.getAddresses();
         if (addresses == null) {
             addresses = new ArrayList<String>();
@@ -92,46 +68,76 @@ public class FrontService {
         addresses.add(address);
         user.setAddresses(addresses);
 
-        HttpEntity<User> requestEntity = new HttpEntity<User>(user, headers);
-        ParameterizedTypeReference<String> responseType = new ParameterizedTypeReference<String>() {
-        };
-        ResponseEntity<String> response = exchange(url, putMethod, requestEntity, responseType);
-        String message = response.getBody();
+        userRepository.save(user);
 
-        return message;
+        return "Profile updated successfully";
     }
 
-    public String addToCart(String sku, String username) {
-        String url = sourceurl + "/users/" + username + "/cart/" + sku;
-        HttpEntity<?> requestEntity = null;
-        ParameterizedTypeReference<String> responseType = new ParameterizedTypeReference<String>() {
-        };
-        ResponseEntity<String> response = exchange(url, postMethod, requestEntity, responseType);
-        String message = response.getBody();
+    public String addToCart(String sku, Principal principal) {
+        String email = principal.getName();
+        User user = userRepository.findByEmail(email);
 
-        return message;
+        List<CartItem> cart = user.getCart();
+
+        Product product = productRepository.findBySKU(sku);
+
+        if (product != null) {
+
+            String productSKU = product.getSKU();
+            boolean found = false;
+
+            if (cart == null) {
+                cart = new ArrayList<CartItem>();
+            }
+            for (CartItem cartItem : cart) {
+                if (cartItem.getProduct() == null) {
+                    cart.remove(cartItem);
+                } else if (cartItem.getSku().equals(productSKU)) {
+                    if (product.getQuantity() < cartItem.getQuantity() + 1) {
+                        return "Not enough stock";
+                    }
+                    cartItem.setQuantity(cartItem.getQuantity() + 1);
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                CartItem cartItem = new CartItem();
+                cartItem.setProduct(product);
+                cartItem.setQuantity(1);
+                cart.add(cartItem);
+            }
+            user.setCart(cart);
+            userService.updateUser(user);
+            return "Added to cart";
+
+        }
+
+        return "Product not found";
     }
 
-    public String removeFromCart(String sku, String username) {
-        String url = sourceurl + "/users/" + username + "/cart/" + sku;
-        HttpEntity<?> requestEntity = null;
-        ParameterizedTypeReference<String> responseType = new ParameterizedTypeReference<String>() {
-        };
-        ResponseEntity<String> response = exchange(url, deleteMethod, requestEntity, responseType);
-        String message = response.getBody();
+    public String removeFromCart(String sku, String email) {
+        User user = userRepository.findByEmail(email);
+        List<CartItem> cart = user.getCart();
 
-        return message;
+        if (cart == null) {
+            return "Cart is empty";
+        }
+        for (CartItem cartItem : cart) {
+
+            if (cartItem.getSku().equals(sku)) {
+                cart.remove(cartItem);
+                break;
+            }
+        }
+        user.setCart(cart);
+        userRepository.save(user);
+        return "Removed from cart";
     }
 
     public List<CartItem> getCart(String username) {
-        String url = sourceurl + "/users/" + username + "/cart";
-        HttpEntity<?> requestEntity = null;
-        ParameterizedTypeReference<List<CartItem>> responseType = new ParameterizedTypeReference<List<CartItem>>() {
-        };
-        ResponseEntity<List<CartItem>> response = exchange(url, getMethod, requestEntity, responseType);
-        List<CartItem> cart = response.getBody();
-
-        return cart;
+        User user = userRepository.findByEmail(username);
+        return user.getCart();
     }
 
     public int getCartTotal(List<CartItem> cart) {
@@ -145,63 +151,64 @@ public class FrontService {
         return total;
     }
 
-    public String incCartQty(String sku, String username) {
-        String url = sourceurl + "/users/" + username + "/cart/" + sku;
-        HttpEntity<?> requestEntity = null;
-        ParameterizedTypeReference<String> responseType = new ParameterizedTypeReference<String>() {
-        };
-        ResponseEntity<String> response = exchange(url, postMethod, requestEntity, responseType);
-        String message = response.getBody();
-
-        return message;
+    public String incCartQty(String sku, Principal principal) {
+        addToCart(sku, principal);
+        return "Added to cart";
     }
 
     public String decCartQty(String sku, String username) {
-        String url = sourceurl + "/users/" + username + "/cart/" + sku;
-        HttpEntity<?> requestEntity = null;
-        ParameterizedTypeReference<String> responseType = new ParameterizedTypeReference<String>() {
-        };
-        ResponseEntity<String> response = exchange(url, putMethod, requestEntity, responseType);
-        String message = response.getBody();
+        User user = userRepository.findByEmail(username);
+        List<CartItem> cart = user.getCart();
 
-        return message;
+        if (cart == null) {
+            return "Cart is empty";
+        }
+
+        for (CartItem cartItem : cart) {
+            if (cartItem.getSku().equals(sku)) {
+                cartItem.setQuantity(cartItem.getQuantity() - 1);
+                if (cartItem.getQuantity() == 0) {
+                    cart.remove(cartItem);
+                }
+                break;
+            }
+        }
+
+        user.setCart(cart);
+
+        userRepository.save(user);
+
+        return "Cart updated";
     }
 
     public String deleteProduct(String sku) {
-        String url = sourceurl + "/products/" + sku;
-        HttpEntity<?> requestEntity = null;
-        ParameterizedTypeReference<String> responseType = new ParameterizedTypeReference<String>() {
-        };
-        ResponseEntity<String> response = exchange(url, deleteMethod, requestEntity, responseType);
-        String message = response.getBody();
-
-        return message;
+        productRepository.deleteBySKU(sku);
+        return "Product deleted";
     }
 
-    public String updateProduct(Product product) {
-        String url = sourceurl + "/products";
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<Product> requestEntity = new HttpEntity<>(product, headers);
-        ParameterizedTypeReference<String> responseType = new ParameterizedTypeReference<String>() {
-        };
-        ResponseEntity<String> response = exchange(url, putMethod, requestEntity, responseType);
-        String message = response.getBody();
-
-        return message;
+    public String updateProduct(Product updatedProduct) {
+        Product existingProduct = productRepository.findBySKU(updatedProduct.getSKU());
+        if (existingProduct != null) {
+            updatedProduct.setId(existingProduct.getId());
+            productRepository.save(updatedProduct);
+            return "Product updated";
+        }
+        return "Product not found";
     }
 
     public String addUser(User user) {
-        String url = sourceurl + "/users";
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<User> requestEntity = new HttpEntity<>(user, headers);
-        ParameterizedTypeReference<String> responseType = new ParameterizedTypeReference<String>() {
-        };
-        ResponseEntity<String> response = exchange(url, postMethod, requestEntity, responseType);
-        String message = response.getBody();
+        if (userRepository.findByEmail(user.getEmail()) != null) {
+            return null;
+        }
 
-        return message;
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+        user.setRole("USER");
+        user.setAddresses(new ArrayList<>());
+        user.setCart(new ArrayList<>());
+
+        userRepository.save(user);
+        return "User added";
     }
 
     public List<CartItem> removeNullCartItem(List<CartItem> cart) {

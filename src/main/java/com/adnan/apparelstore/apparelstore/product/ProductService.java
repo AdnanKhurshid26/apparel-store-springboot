@@ -1,5 +1,6 @@
 package com.adnan.apparelstore.apparelstore.product;
 
+import java.security.Principal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,18 +8,32 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import com.adnan.apparelstore.apparelstore.user.User;
+import com.adnan.apparelstore.apparelstore.user.UserService;
+
 @Service
 public class ProductService {
 
     @Autowired
     private ProductRepository productRepository;
+    @Autowired
+    private UserService userService;
 
     public List<Product> getAllProducts() {
         return productRepository.findAll();
     }
 
     public Page<Product> getPaginatedProducts(int page, int size) {
-        return productRepository.findAll(PageRequest.of(page, size));
+
+        Page<Product> products = productRepository.findAll(PageRequest.of(page, size));
+
+        return products;
+    }
+
+    public User getUserProfile(Principal principal) {
+        String email = principal.getName();
+
+        return userService.getUserByEmail(email);
     }
 
     public Product getProductBySKU(String sku) {
