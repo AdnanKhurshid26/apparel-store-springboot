@@ -18,6 +18,10 @@
               class="card-title"
               style="color: rgb(53, 220, 53)"
             ></h5>
+            <h6
+              th:text="'Qty : ' + ${product.quantity}"
+              class="card-title"
+            ></h6>
             <p th:utext="${product.shortDescription}" class="card-text"></p>
             <div class="_card-bottom mt-auto">
               <a

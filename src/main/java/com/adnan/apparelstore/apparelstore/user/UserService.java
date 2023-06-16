@@ -169,7 +169,7 @@ public class UserService implements UserDetailsService {
     public List<CartItem> removeNullCartItem(List<CartItem> cart) {
         List<CartItem> newCart = new ArrayList<>();
         for (CartItem cartItem : cart) {
-            if (cartItem != null) {
+            if (cartItem.getProduct() != null) {
                 newCart.add(cartItem);
             }
         }
@@ -191,6 +191,8 @@ public class UserService implements UserDetailsService {
         User user = userRepository.findByEmail(email);
         List<CartItem> cart = user.getCart();
         List<CartItem> newCart = removeNullCartItem(cart);
+        user.setCart(newCart);
+        userRepository.save(user);
         return newCart;
     }
 
