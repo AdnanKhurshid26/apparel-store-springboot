@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -62,8 +64,6 @@ public class UserController {
     @GetMapping("/cart")
     @PreAuthorize("hasAuthority('USER')")
     public String cart(Model model, Principal principal) {
-
-        // call api /products to get user profile
         List<CartItem> cart = userService.getUserCart(principal.getName());
         int total = userService.getCartTotal(cart);
         User user = userService.getUserByEmail(principal.getName());
@@ -107,13 +107,19 @@ public class UserController {
 
     @GetMapping("/register")
     public String register() {
-
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication.isAuthenticated()) {
+            return "redirect:/";
+        }
         return "register";
     }
 
     @PostMapping("/register")
     public String register(@Valid User user) {
-
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication.isAuthenticated()) {
+            return "redirect:/";
+        }
         userService.addUser(user);
 
         return "redirect:/";
